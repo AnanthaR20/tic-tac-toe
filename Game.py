@@ -102,7 +102,7 @@ class Game:
             player = "Player X" if self.X_to_move else "Player O"
             print(f"{player} to move")
             self.board.print()
-            move = input("Input your move as {row #}{column #} with no space")
+            move = input("Input your move as {row #}{column #} with no space\n")
             if move == 'q':
                 break
             if len(move) != 2 or int(move[0]) > 3 or int(move[1]) > 3:
