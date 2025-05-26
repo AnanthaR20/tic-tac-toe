@@ -8,7 +8,7 @@ class Board:
 
     SPACING = "  "
     PLAYER_X_NUMBER = 1
-    PLAYER_O_NUMBER = 2
+    PLAYER_O_NUMBER = -1
 
     def __init__(self):
         """
@@ -24,22 +24,33 @@ class Board:
         
         return "\n".join([Board.SPACING.join(cell) for cell in str_mat])
 
+    def is_legal_move(self,cell:tuple[int,int]) -> bool:
+        """Checks if a move is legal for the current board state
+            Arguments:
+                cell: location where a symbol is to be placed
+            
+            Returns:
+                True if possible otherwise False
+        """
+        row, col = cell[0], cell[1]
+        if self.board[row][col] == 0:
+            return True
+        else:
+            return False
+
     def move(self,cell:tuple[int,int],X_to_move:bool = True) -> None:
-        """Put a move on the board
+        """Put a move on the board. Changes the Board object
             Arguments:
                 cell: coordinates of where to place the move
                 playerX: indicates whether to place an 'X' or 'O'
             
             Returns:
-                None
+                whether or not the move is valie
         """
-        row = cell[0]
-        col = cell[1]
-        if self.board[row][col] != 0:
-            print("Invalid Move")
+        if not self.is_legal_move(cell):
             return
         
-        self.board[row][col] = Board.PLAYER_X_NUMBER if X_to_move else Board.PLAYER_O_NUMBER
+        self.board[cell[0]][cell[1]] = Board.PLAYER_X_NUMBER if X_to_move else Board.PLAYER_O_NUMBER
 
 
     def get_state(self):
