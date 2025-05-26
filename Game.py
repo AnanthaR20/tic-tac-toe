@@ -1,4 +1,4 @@
-import re,sys
+import re,sys,random
 import numpy as np
 from Board import Board
 
@@ -28,10 +28,11 @@ class Game:
             return
         
         self.record.append({
-            "X_to_move":self.X_to_move,
+            "move_number":self.move_counter+1,
+            "player_to_move": Board.PLAYER_X_NUMBER if self.X_to_move else Board.PLAYER_O_NUMBER,
             "state":self.board.get_state(),
-            "moves_so_far":self.move_counter,
-            "move":cell
+            "move_coordinates":cell,
+            "move": 3*cell[0]+ cell[1]
         })
         self.board.move(cell,X_to_move=self.X_to_move)
         self.move_counter += 1
@@ -76,8 +77,8 @@ class Game:
         """Updates game result in record of game"""
         self.result = self.game_result()
         for rec in self.record:
-            rec["game_result"] = self.result        
-
+            rec["game_result"] = self.result
+            rec["total_moves"] = self.move_counter        
 
     def play(self) -> None:
         """Runs a CLI interface for playing Tic Tac Toe. Can quit by 
@@ -115,6 +116,23 @@ class Game:
                 continue
             self.move((row,col))
 
+    def generate_game() -> list[dict]:
+        """Generates a complete game and returns the move records"""
+        g = Game()
+        while not g.is_game_over():
+            possible_moves = []
+            for i,v in enumerate(g.board.board):
+                for j,z in enumerate(g.board.board[i]):
+                    if z == 0:
+                        possible_moves.append((i,j))
+
+            mv = random.sample(possible_moves,1)[0]
+            g.move(mv)
+        
+        g.report_game_result()
+
+        return g.record
 
 
-    
+
+
