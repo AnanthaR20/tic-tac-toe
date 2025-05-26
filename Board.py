@@ -1,8 +1,6 @@
 import re,sys
 import numpy as np
 
-
-
 class Board:
     """
     
@@ -26,7 +24,7 @@ class Board:
         
         return "\n".join([Board.SPACING.join(cell) for cell in str_mat])
 
-    def move(self,cell:tuple[int,int],playerX:bool = True) -> None:
+    def move(self,cell:tuple[int,int],X_to_move:bool = True) -> None:
         """Put a move on the board
             Arguments:
                 cell: coordinates of where to place the move
@@ -41,9 +39,20 @@ class Board:
             print("Invalid Move")
             return
         
-        self.board[row][col] = Board.PLAYER_X_NUMBER if playerX else Board.PLAYER_O_NUMBER
+        self.board[row][col] = Board.PLAYER_X_NUMBER if X_to_move else Board.PLAYER_O_NUMBER
 
-    
+
+    def get_state(self):
+        """
+        
+        """
+        state = []
+        for i in self.board:
+            state.extend(i)
+        
+        return state
+
+
     def print(self):
         """
         
