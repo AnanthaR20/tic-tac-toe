@@ -2,6 +2,8 @@ import argparse
 import copy
 import random
 
+from data import Dataset # my dataset file
+from model import FFN # my model file
 import torch
 import numpy as np
 from torch import Tensor
@@ -44,26 +46,28 @@ if __name__ == "__main__":
     torch.manual_seed(args.seed)
 
     # build datasets
-    sst_train = SSTLanguageModelingDataset.from_file(args.train_data)
-    sst_dev = SSTLanguageModelingDataset.from_file(args.dev_data, vocab=sst_train.vocab)
+    # sst_train = SSTLanguageModelingDataset.from_file(args.train_data)
+    train = Dataset.from_txt(args.train_data)
+    # sst_dev = SSTLanguageModelingDataset.from_file(args.dev_data, vocab=sst_train.vocab)
     # arrays of entire dev set
-    dev_data = sst_dev.batch_as_tensors(0, len(sst_dev))
+    # dev_data = sst_dev.batch_as_tensors(0, len(sst_dev))
     # convert to Tensors
-    dev_data = {key: torch.LongTensor(value) for key, value in dev_data.items()}
+    # dev_data = {key: torch.LongTensor(value) for key, value in dev_data.items()}
 
     # build model
-    padding_index = sst_train.vocab[SSTLanguageModelingDataset.PAD]
+    # padding_index = sst_train.vocab[SSTLanguageModelingDataset.PAD]
     # get the language model
-    model = LSTMLanguageModel(
-        args.embedding_dim,
-        args.hidden_dim,
-        len(sst_train.vocab),
-        padding_index,
-        args.dropout,
-    )
+    model = FFN(10,10,9)
+    # LSTMLanguageModel(
+    #     args.embedding_dim,
+    #     args.hidden_dim,
+    #     len(sst_train.vocab),
+    #     padding_index,
+    #     args.dropout,
+    # )
 
     # get training things set up
-    data_size = len(sst_train)
+    data_size = len(train)
     batch_size = args.batch_size
     starts = list(range(0, data_size, batch_size))
     optimizer = torch.optim.Adam(model.parameters(), weight_decay=args.l2, lr=args.lr)
@@ -75,7 +79,7 @@ if __name__ == "__main__":
         # shuffle batches
         random.shuffle(starts)
         for start in tqdm(starts):
-            batch = sst_train.batch_as_tensors(
+            batch = train.batch_as_tensors( ########################## last worked on this on 6-22-2025 was here deciphering batch_as_tensors function
                 start, min(start + batch_size, data_size)
             )
             model.train()

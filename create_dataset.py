@@ -14,12 +14,14 @@ def main(size:int,file:str):
             continue
         for i,move in enumerate(moves):
             if move["game_result"] == move["player_to_move"]:
+                # First 9 features are the board state, the 10th number represents the player to move.
                 move['state'].append(np.int64(move['player_to_move']))
                 examples.append({
                     "input_state": move['state'],
                     "target_move": move["move"]
                 })
             if move["game_result"] == 0:
+                # First 9 features are the board state, the 10th number represents the player to move.
                 move['state'].append(np.int64(move['player_to_move']))
                 examples.append({
                     "input_state": move['state'],
